@@ -6,6 +6,8 @@ import 'package:lottie/lottie.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:flex_color_scheme/flex_color_scheme.dart';
+import 'package:twitter_login/twitter_login.dart';
+import 'package:twitter_observation/scrn/login_page.dart';
 
 import 'model/transaction.dart';
 import 'scrn/starting_page.dart';
@@ -16,11 +18,13 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final appDocDir = await path_provider.getApplicationDocumentsDirectory();
   Hive.init(appDocDir.path);
+  // Hive.initFlutter;
 
   Hive.registerAdapter(TransactionAdapter());
   await Hive.openBox<Transaction>(boxName);
 
   // await Hive.openBox(boxName);
+
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -35,7 +39,7 @@ class MyApp extends StatelessWidget {
       // The Mandy red, dark theme.
       darkTheme: FlexThemeData.dark(scheme: FlexScheme.bigStone),
       // Use dark or light theme based on system setting.
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.dark,
 
       title: 'Twitter',
       home: const SplashScreen(),
@@ -51,7 +55,7 @@ class SplashScreen extends StatelessWidget {
     return AnimatedSplashScreen(
       splash: Lottie.asset('assets/117164-dancing-box.json',
           width: 150, height: 150, fit: BoxFit.cover),
-      nextScreen: const StartingPage(),
+      nextScreen: const LoginPage(),
       splashTransition: SplashTransition.rotationTransition,
       pageTransitionType: PageTransitionType.fade,
     );

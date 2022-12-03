@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:intl/intl.dart';
@@ -63,13 +64,28 @@ class RecentSearchInfo extends ConsumerWidget {
                 itemBuilder: ((context, index) {
                   return ListView.builder(
                     shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: data[index].includes!.users!.length,
                     itemBuilder: ((context, index1) {
-                      return Container(
-                        width: MediaQuery.of(context).size.width,
-                        padding: const EdgeInsets.all(10),
-                        margin: const EdgeInsets.all(8),
-                        child: Card(
+                      // var nlist = data[index].includes!.users!;
+
+                      // nlist.sort(((a, b) => b.publicMetrics!.likeCount!
+                      //     .compareTo(a.publicMetrics!.likeCount!)));
+
+                      var alist = [1, 0, 0, 1, 0, 0, 2, 0];
+
+                      alist.sort(
+                        (a, b) => b.compareTo(a),
+                      );
+
+                      print(alist.toString());
+
+                      // print('Sort by Age: ' + nlist.toString());
+
+                      return Card(
+                        color: const Color.fromARGB(255, 20, 42, 68),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
                           child: Column(
                             children: [
                               Text(index1.toString()),
@@ -110,58 +126,90 @@ class RecentSearchInfo extends ConsumerWidget {
                               const SizedBox(
                                 height: 14,
                               ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          const Icon(Icons.message_rounded),
-                                          const SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(data[index]
+                              data[index].data![index1].text!.startsWith('RT')
+                                  ? Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        const FaIcon(
+                                          FontAwesomeIcons.retweet,
+                                          size: 20,
+                                          color: Colors.lightBlue,
+                                        ),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          data[index]
                                               .data![index1]
                                               .publicMetrics!
-                                              .replyCount!
-                                              .toString()),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Icon(
-                                              Icons.heart_broken_rounded),
-                                          const SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(data[index]
-                                              .data![index1]
-                                              .publicMetrics!
-                                              .likeCount!
-                                              .toString()),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Icon(Icons.reset_tv_rounded),
-                                          const SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            data[index]
+                                              .retweetCount!
+                                              .toString(),
+                                        )
+                                      ],
+                                    )
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const FaIcon(
+                                              FontAwesomeIcons.reply,
+                                              size: 20,
+                                              color: Colors.cyan,
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text(data[index]
                                                 .data![index1]
                                                 .publicMetrics!
-                                                .retweetCount!
-                                                .toString(),
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ),
+                                                .replyCount!
+                                                .toString()),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const FaIcon(
+                                              FontAwesomeIcons.heart,
+                                              size: 20,
+                                              color: Colors.red,
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text(data[index]
+                                                .data![index1]
+                                                .publicMetrics!
+                                                .likeCount!
+                                                .toString()),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            const FaIcon(
+                                              FontAwesomeIcons.retweet,
+                                              size: 20,
+                                              color: Colors.lightBlue,
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text(
+                                              data[index]
+                                                  .data![index1]
+                                                  .publicMetrics!
+                                                  .retweetCount!
+                                                  .toString(),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
                                   Link(
                                     target: LinkTarget.blank,
                                     uri: Uri.parse(
@@ -172,7 +220,7 @@ class RecentSearchInfo extends ConsumerWidget {
                                       child: const Text('go to the tweet'),
                                     ),
                                   ),
-                                  ElevatedButton(
+                                  TextButton(
                                     onPressed: () {
                                       var tweetData = data[index]
                                           .data![index1]
@@ -188,7 +236,7 @@ class RecentSearchInfo extends ConsumerWidget {
                                     child: const Text('save the tweet'),
                                   ),
                                 ],
-                              ),
+                              )
                             ],
                           ),
                         ),
@@ -212,9 +260,12 @@ class RecentSearchInfo extends ConsumerWidget {
                     },
                     child: const Text(
                       'load more',
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: Colors.white),
                     ))
-                : const Text('no more data'),
+                : const Text(
+                    'no more data',
+                    style: TextStyle(color: Colors.white),
+                  ),
           ],
         );
       }, error: (error, _) {

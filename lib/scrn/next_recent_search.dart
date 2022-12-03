@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:intl/intl.dart';
@@ -68,38 +69,38 @@ class _NextRecentSearchState extends State<NextRecentSearch> {
         ],
         title: const Text('result'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: FutureBuilder<List<ApiModelRecentSearch>>(
-          future:
-              apiNextRecentSearch.getApi(widget.searchInfo, widget.nextToken),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.white54,
-                ),
-              );
-            } else if (snapshot.hasData) {
-              // var now = snapshot.data![0].data!.createdAt;
-              return Column(
-                children: [
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: ((context, index) {
-                        return ListView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount:
-                              snapshot.data![index].includes!.users!.length,
-                          itemBuilder: ((context, index1) {
-                            return SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              child: Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
+      body: Column(
+        children: [
+          Expanded(
+            child: FutureBuilder<List<ApiModelRecentSearch>>(
+              future: apiNextRecentSearch.getApi(
+                  widget.searchInfo, widget.nextToken),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.white54,
+                    ),
+                  );
+                } else if (snapshot.hasData) {
+                  // var now = snapshot.data![0].data!.createdAt;
+                  return Column(
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: ((context, index) {
+                            return ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount:
+                                  snapshot.data![index].includes!.users!.length,
+                              itemBuilder: ((context, index1) {
+                                return Card(
+                                  color: const Color.fromARGB(255, 20, 42, 68),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
                                       children: [
@@ -123,12 +124,17 @@ class _NextRecentSearchState extends State<NextRecentSearch> {
                                             const SizedBox(
                                               width: 8,
                                             ),
-                                            Text(
-                                              snapshot.data![index].includes!
-                                                  .users![index1].name!,
-                                              style: const TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w500),
+                                            Flexible(
+                                              fit: FlexFit.loose,
+                                              child: Text(
+                                                snapshot.data![index].includes!
+                                                    .users![index1].username!,
+                                                overflow: TextOverflow.clip,
+                                                style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -142,61 +148,70 @@ class _NextRecentSearchState extends State<NextRecentSearch> {
                                         ),
                                         Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                              MainAxisAlignment.spaceEvenly,
                                           children: [
                                             Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
                                               children: [
-                                                Row(
-                                                  children: [
-                                                    const Icon(
-                                                        Icons.message_rounded),
-                                                    const SizedBox(
-                                                      width: 5,
-                                                    ),
-                                                    Text(snapshot
-                                                        .data![index]
-                                                        .data![index1]
-                                                        .publicMetrics!
-                                                        .replyCount!
-                                                        .toString()),
-                                                  ],
+                                                const FaIcon(
+                                                  FontAwesomeIcons.reply,
+                                                  size: 20,
+                                                  color: Colors.cyan,
                                                 ),
-                                                Row(
-                                                  children: [
-                                                    const Icon(Icons
-                                                        .heart_broken_rounded),
-                                                    const SizedBox(
-                                                      width: 5,
-                                                    ),
-                                                    Text(snapshot
-                                                        .data![index]
-                                                        .data![index1]
-                                                        .publicMetrics!
-                                                        .likeCount!
-                                                        .toString()),
-                                                  ],
+                                                const SizedBox(
+                                                  width: 5,
                                                 ),
-                                                Row(
-                                                  children: [
-                                                    const Icon(
-                                                        Icons.reset_tv_rounded),
-                                                    const SizedBox(
-                                                      width: 5,
-                                                    ),
-                                                    Text(
-                                                      snapshot
-                                                          .data![index]
-                                                          .data![index1]
-                                                          .publicMetrics!
-                                                          .retweetCount!
-                                                          .toString(),
-                                                    )
-                                                  ],
-                                                ),
+                                                Text(snapshot
+                                                    .data![index]
+                                                    .data![index1]
+                                                    .publicMetrics!
+                                                    .replyCount!
+                                                    .toString()),
                                               ],
                                             ),
+                                            Row(
+                                              children: [
+                                                const FaIcon(
+                                                  FontAwesomeIcons.heart,
+                                                  size: 20,
+                                                  color: Colors.red,
+                                                ),
+                                                const SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Text(snapshot
+                                                    .data![index]
+                                                    .data![index1]
+                                                    .publicMetrics!
+                                                    .likeCount!
+                                                    .toString()),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                const FaIcon(
+                                                  FontAwesomeIcons.retweet,
+                                                  size: 20,
+                                                  color: Colors.lightBlue,
+                                                ),
+                                                const SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Text(
+                                                  snapshot
+                                                      .data![index]
+                                                      .data![index1]
+                                                      .publicMetrics!
+                                                      .retweetCount!
+                                                      .toString(),
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
                                             Link(
                                               target: LinkTarget.blank,
                                               uri: Uri.parse(
@@ -208,7 +223,7 @@ class _NextRecentSearchState extends State<NextRecentSearch> {
                                                     'go to the tweet'),
                                               ),
                                             ),
-                                            ElevatedButton(
+                                            TextButton(
                                               onPressed: () {
                                                 var data = snapshot.data![index]
                                                     .data![index1].text!
@@ -224,35 +239,37 @@ class _NextRecentSearchState extends State<NextRecentSearch> {
                                                   const Text('save the tweet'),
                                             ),
                                           ],
-                                        ),
-                                      ]),
-                                ),
-                              ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }),
                             );
                           }),
-                        );
-                      }),
-                    ),
-                  ),
-                  // (snapshot.data![0].meta!.resultCount! > 98)
-                  //     ? TextButton(
-                  //         // style: const ButtonStyle(),
-                  //         onPressed: () {
-                  //           var nextToken = snapshot.data![0].meta!.nextToken;
+                        ),
+                      ),
+                      // (snapshot.data![0].meta!.resultCount! > 98)
+                      //     ? TextButton(
+                      //         // style: const ButtonStyle(),
+                      //         onPressed: () {
+                      //           var nextToken = snapshot.data![0].meta!.nextToken;
 
-                  //           print(nextToken);
-                  //         },
-                  //         child: const Text('load more'))
-                  //     : const Text('no more data'),
-                ],
-              );
-            }
+                      //           print(nextToken);
+                      //         },
+                      //         child: const Text('load more'))
+                      //     : const Text('no more data'),
+                    ],
+                  );
+                }
 
-            return const Center(
-              child: Text('Loading..'),
-            );
-          },
-        ),
+                return const Center(
+                  child: Text('Loading..'),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

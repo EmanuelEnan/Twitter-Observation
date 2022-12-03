@@ -15,7 +15,7 @@ class ApiServiceRecentSearch {
   Future<List<ApiModelRecentSearch>> getApi(String searchTerm) async {
     var slug = searchTerm;
     String url =
-        'https://api.twitter.com/2/tweets/search/recent?query=$slug lang:en -is:retweet &max_results=100&tweet.fields=conversation_id,created_at,id,possibly_sensitive,public_metrics,reply_settings,text,withheld&expansions=author_id,referenced_tweets.id&user.fields=profile_image_url';
+        'https://api.twitter.com/2/tweets/search/recent?query=$slug &max_results=100&tweet.fields=conversation_id,created_at,id,possibly_sensitive,public_metrics,reply_settings,text,withheld&expansions=author_id,referenced_tweets.id&user.fields=profile_image_url';
 
     // Map<String, List<String>> qParams = {
     //   'user.fields': ['created_at', 'description', 'entities'],
@@ -29,6 +29,7 @@ class ApiServiceRecentSearch {
       headers: {
         "Authorization": tokens.bearerToken,
         "User-Agent": "v2UserLookupJS",
+        // "x-rate-limit-limit" : "20",
       },
     );
 

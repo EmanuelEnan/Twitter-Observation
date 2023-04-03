@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:twitter_login/twitter_login.dart';
+import 'package:twitter_observation/main.dart';
 import 'package:twitter_observation/scrn/starting_page.dart';
 import 'package:twitter_observation/tokens.dart';
+
+import '../model/transaction.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -87,11 +91,15 @@ class _LoginPageState extends State<LoginPage> {
         print('====== Login cancel ======');
         break;
       case TwitterLoginStatus.error:
+        print('====== Login issue ======');
+        break;
       case null:
         // error
         print('====== Login error ======');
         break;
     }
+
+    // Hive.box(logName).put('cred', TwitterLoginStatus.loggedIn);
 
     if (authResult.status == TwitterLoginStatus.loggedIn) {
       Navigator.of(context)

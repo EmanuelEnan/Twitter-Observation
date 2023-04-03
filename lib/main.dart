@@ -1,6 +1,7 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:page_transition/page_transition.dart';
@@ -8,20 +9,24 @@ import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:twitter_login/twitter_login.dart';
 import 'package:twitter_observation/scrn/login_page.dart';
+import 'package:twitter_observation/scrn/responsive_page.dart';
 
 import 'model/transaction.dart';
+import 'scrn/landing_page.dart';
 import 'scrn/starting_page.dart';
 
 const String boxName = 'fact';
+const String logName = 'twit';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final appDocDir = await path_provider.getApplicationDocumentsDirectory();
-  Hive.init(appDocDir.path);
+  // final appDocDir = await path_provider.getApplicationDocumentsDirectory();
+  Hive.initFlutter();
   // Hive.initFlutter;
 
   Hive.registerAdapter(TransactionAdapter());
   await Hive.openBox<Transaction>(boxName);
+  // await Hive.openBox(logName);
 
   // await Hive.openBox(boxName);
 
@@ -35,29 +40,39 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: FlexThemeData.light(scheme: FlexScheme.bigStone),
-      // The Mandy red, dark theme.
-      darkTheme: FlexThemeData.dark(scheme: FlexScheme.bigStone),
-      // Use dark or light theme based on system setting.
+      title: 'TwitObservation',
+      darkTheme: ThemeData(
+        textTheme: GoogleFonts.latoTextTheme(
+          Theme.of(context).textTheme.apply(
+                displayColor: Colors.white,
+                bodyColor: Colors.white,
+              ),
+        ),
+        brightness: Brightness.dark,
+        /* dark theme settings */
+      ),
       themeMode: ThemeMode.dark,
-
-      title: 'Twitter',
-      home: const SplashScreen(),
+      home: const ResponsivePage(),
     );
   }
 }
 
-class SplashScreen extends StatelessWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+// class SplashScreen extends StatelessWidget {
+//   const SplashScreen({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedSplashScreen(
-      splash: Lottie.asset('assets/117164-dancing-box.json',
-          width: 150, height: 150, fit: BoxFit.cover),
-      nextScreen: const LoginPage(),
-      splashTransition: SplashTransition.rotationTransition,
-      pageTransitionType: PageTransitionType.fade,
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return AnimatedSplashScreen(
+//       splash: Lottie.asset('assets/117164-dancing-box.json',
+//           width: 150, height: 150, fit: BoxFit.cover),
+//       // nextScreen: const StartingPage(),
+//       nextScreen: const LandingPage(),
+
+//       // nextScreen: Hive.box(logName).get('fact') == null
+//       //     ? const LoginPage()
+//       //     : const StartingPage(),
+//       splashTransition: SplashTransition.rotationTransition,
+//       pageTransitionType: PageTransitionType.fade,
+//     );
+//   }
+// }

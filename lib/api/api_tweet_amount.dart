@@ -1,20 +1,22 @@
 import 'dart:convert';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
 import '../api_model/api_model_recent_search.dart';
+import '../api_model/tweet_amount_model.dart';
 import '../tokens.dart';
 
-class ApiNextRecentSearch {
+final apiServiceTweet =
+    Provider<ApiServiceTweetAmount>((ref) => ApiServiceTweetAmount());
+
+class ApiServiceTweetAmount {
   Tokens tokens = Tokens();
 
-  Future<List<ApiModelRecentSearch>> getApi(
-      String searchTerm, String nextToken) async {
-    var slug1 = searchTerm;
-    var slug2 = nextToken;
+  Future<List<TweetAmount>> getApi(String searchTerm) async {
+    var slug = searchTerm;
     String url =
-        'https://api.twitter.com/2/tweets/search/recent?query=$slug1 lang:en -is:retweet &max_results=100&next_token=$slug2&tweet.fields=conversation_id,created_at,id,possibly_sensitive,public_metrics,reply_settings,text,withheld&expansions=author_id,referenced_tweets.id&user.fields=profile_image_url';
-
+        'https://api.twitter.com/2/tweets/counts/recent?query=$slug&granularity=day';
     // Map<String, List<String>> qParams = {
     //   'user.fields': ['created_at', 'description', 'entities'],
     // };
@@ -22,7 +24,9 @@ class ApiNextRecentSearch {
     Uri uri = Uri.parse(url);
     // final finalUri = uri.replace(queryParameters: qParams);
 
-    final response = await http.get(
+    final client = http.Client();
+
+    final response = await client.get(
       uri,
       headers: {
         "Authorization": tokens.bearerToken,
@@ -30,6 +34,7 @@ class ApiNextRecentSearch {
         // "Access-Control-Allow-Origin": "*",
         // 'Content-Type': 'application/json',
         // 'Accept': '*/*'
+        // "x-rate-limit-limit" : "20",
       },
     );
 
@@ -43,9 +48,7 @@ class ApiNextRecentSearch {
         print(resp);
         // Map services = jsonDecode(resp);
         List service = (jsonDecode(resp) as List<dynamic>);
-        return service
-            .map((json) => ApiModelRecentSearch.fromJson(json))
-            .toList();
+        return service.map((json) => TweetAmount.fromJson(json)).toList();
         // return ApiModelRecentSearch.fromJson(jsonDecode(resp));
         //
       }

@@ -1,20 +1,20 @@
 import 'dart:convert';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
-
-import '../api_model/api_model_recent_search.dart';
+import 'package:twitter_observation/api_model/follower_model.dart';
 import '../tokens.dart';
 
-class ApiNextRecentSearch {
+final apiServiceFollower =
+    Provider<ApiServiceFollowers>((ref) => ApiServiceFollowers());
+
+class ApiServiceFollowers {
   Tokens tokens = Tokens();
 
-  Future<List<ApiModelRecentSearch>> getApi(
-      String searchTerm, String nextToken) async {
-    var slug1 = searchTerm;
-    var slug2 = nextToken;
+  Future<List<FollowerModel>> getApi(String searchTerm) async {
+    var slug = searchTerm;
     String url =
-        'https://api.twitter.com/2/tweets/search/recent?query=$slug1 lang:en -is:retweet &max_results=100&next_token=$slug2&tweet.fields=conversation_id,created_at,id,possibly_sensitive,public_metrics,reply_settings,text,withheld&expansions=author_id,referenced_tweets.id&user.fields=profile_image_url';
-
+        'https://api.twitter.com/2/tweets/search/recent?query=$slug lang:en -is:retweet&max_results=100&tweet.fields=conversation_id,created_at,geo,id,lang,possibly_sensitive,public_metrics,reply_settings,source,text,withheld&expansions=author_id,geo.place_id&media.fields=public_metrics,type&place.fields=contained_within,country,country_code,full_name,geo,id,name,place_type&user.fields=created_at,description,id,location,name,protected,public_metrics,url,username,verified,withheld';
     // Map<String, List<String>> qParams = {
     //   'user.fields': ['created_at', 'description', 'entities'],
     // };
@@ -30,6 +30,7 @@ class ApiNextRecentSearch {
         // "Access-Control-Allow-Origin": "*",
         // 'Content-Type': 'application/json',
         // 'Accept': '*/*'
+        // "x-rate-limit-limit" : "20",
       },
     );
 
@@ -43,10 +44,8 @@ class ApiNextRecentSearch {
         print(resp);
         // Map services = jsonDecode(resp);
         List service = (jsonDecode(resp) as List<dynamic>);
-        return service
-            .map((json) => ApiModelRecentSearch.fromJson(json))
-            .toList();
-        // return ApiModelRecentSearch.fromJson(jsonDecode(resp));
+        return service.map((json) => FollowerModel.fromJson(json)).toList();
+        // return FollowerModel.fromJson(jsonDecode(resp));
         //
       }
     } catch (e) {

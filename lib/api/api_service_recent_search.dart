@@ -29,6 +29,9 @@ class ApiServiceRecentSearch {
       headers: {
         "Authorization": tokens.bearerToken,
         "User-Agent": "v2UserLookupJS",
+        // "Access-Control-Allow-Origin": "*",
+        // 'Content-Type': 'application/json',
+        // 'Accept': '*/*'
         // "x-rate-limit-limit" : "20",
       },
     );

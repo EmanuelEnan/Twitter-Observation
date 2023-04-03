@@ -7,14 +7,14 @@ import '../category_scrn/picked_thread.dart';
 import 'feature_dashboard.dart';
 import 'save_folder.dart';
 
-class StartingPage extends StatefulWidget {
-  const StartingPage({Key? key}) : super(key: key);
+class MobileStartingPage extends StatefulWidget {
+  const MobileStartingPage({Key? key}) : super(key: key);
 
   @override
-  State<StartingPage> createState() => _StartingPageState();
+  State<MobileStartingPage> createState() => _MobileStartingPageState();
 }
 
-class _StartingPageState extends State<StartingPage> {
+class _MobileStartingPageState extends State<MobileStartingPage> {
   // List displayList = [const CaseStudies(), const GrowthFun()];
 
   // List newList = [];
@@ -80,8 +80,10 @@ class _StartingPageState extends State<StartingPage> {
             padding: const EdgeInsets.only(
               top: 35,
               bottom: 35,
+              right: 16,
+              left: 16,
             ),
-            width: MediaQuery.of(context).size.width * .6,
+            // width: MediaQuery.of(context).size.width * .6,
             child: Column(
               children: [
                 Row(
@@ -94,7 +96,7 @@ class _StartingPageState extends State<StartingPage> {
                     const Text(
                       'Features',
                       style: TextStyle(
-                        fontSize: 30,
+                        fontSize: 23,
                         fontWeight: FontWeight.w800,
                         color: Color.fromARGB(255, 0, 155, 155),
                       ),
@@ -121,7 +123,7 @@ class _StartingPageState extends State<StartingPage> {
                 //   height: 8,
                 // ),
                 const SizedBox(
-                  height: 55,
+                  height: 40,
                 ),
                 ElevatedButton(
                   style: colorButton,

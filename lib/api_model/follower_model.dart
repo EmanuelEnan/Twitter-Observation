@@ -1,11 +1,81 @@
 class FollowerModel {
+  Response? response;
+
+  FollowerModel({this.response});
+
+  FollowerModel.fromJson(Map<String, dynamic> json) {
+    response =
+        json['response'] != null ? Response.fromJson(json['response']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (response != null) {
+      data['response'] = response!.toJson();
+    }
+    return data;
+  }
+}
+
+class Response {
+  int? iMaxResultsWhenFetchLast;
+  RealData? rRealData;
+  RateLimit? rRateLimit;
+  Instance? iInstance;
+  QueryParams? qQueryParams;
+  String? sEndpoint;
+
+  Response(
+      {this.iMaxResultsWhenFetchLast,
+      this.rRealData,
+      this.rRateLimit,
+      this.iInstance,
+      this.qQueryParams,
+      this.sEndpoint});
+
+  Response.fromJson(Map<String, dynamic> json) {
+    iMaxResultsWhenFetchLast = json['_maxResultsWhenFetchLast'];
+    rRealData =
+        json['_realData'] != null ? RealData.fromJson(json['_realData']) : null;
+    rRateLimit = json['_rateLimit'] != null
+        ? RateLimit.fromJson(json['_rateLimit'])
+        : null;
+    iInstance =
+        json['_instance'] != null ? Instance.fromJson(json['_instance']) : null;
+    qQueryParams = json['_queryParams'] != null
+        ? QueryParams.fromJson(json['_queryParams'])
+        : null;
+    sEndpoint = json['_endpoint'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_maxResultsWhenFetchLast'] = iMaxResultsWhenFetchLast;
+    if (rRealData != null) {
+      data['_realData'] = rRealData!.toJson();
+    }
+    if (rRateLimit != null) {
+      data['_rateLimit'] = rRateLimit!.toJson();
+    }
+    if (iInstance != null) {
+      data['_instance'] = iInstance!.toJson();
+    }
+    if (qQueryParams != null) {
+      data['_queryParams'] = qQueryParams!.toJson();
+    }
+    data['_endpoint'] = sEndpoint;
+    return data;
+  }
+}
+
+class RealData {
   List<Data>? data;
   Includes? includes;
   Meta? meta;
 
-  FollowerModel({this.data, this.includes, this.meta});
+  RealData({this.data, this.includes, this.meta});
 
-  FollowerModel.fromJson(Map<String, dynamic> json) {
+  RealData.fromJson(Map<String, dynamic> json) {
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
@@ -33,83 +103,56 @@ class FollowerModel {
 }
 
 class Data {
-  String? conversationId;
-
   String? authorId;
-  String? lang;
-  bool? possiblySensitive;
   String? id;
-  String? createdAt;
-  String? replySettings;
-  String? source;
   List<String>? editHistoryTweetIds;
   String? text;
-  // Geo? geo;
+  String? createdAt;
+  PublicMetrics? publicMetrics;
 
   Data(
-      {this.conversationId,
-      this.authorId,
-      this.lang,
-      this.possiblySensitive,
+      {this.authorId,
       this.id,
-      this.createdAt,
-      this.replySettings,
-      this.source,
       this.editHistoryTweetIds,
       this.text,
-      });
+      this.createdAt,
+      this.publicMetrics});
 
   Data.fromJson(Map<String, dynamic> json) {
-    conversationId = json['conversation_id'];
     authorId = json['author_id'];
-    lang = json['lang'];
-    possiblySensitive = json['possibly_sensitive'];
     id = json['id'];
-    createdAt = json['created_at'];
-    replySettings = json['reply_settings'];
-    source = json['source'];
     editHistoryTweetIds = json['edit_history_tweet_ids'].cast<String>();
     text = json['text'];
-    // geo = json['geo'] != null ? Geo.fromJson(json['geo']) : null;
+    createdAt = json['created_at'];
+    publicMetrics = json['public_metrics'] != null
+        ? PublicMetrics.fromJson(json['public_metrics'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['conversation_id'] = conversationId;
-
     data['author_id'] = authorId;
-    data['lang'] = lang;
-    data['possibly_sensitive'] = possiblySensitive;
     data['id'] = id;
-    data['created_at'] = createdAt;
-    data['reply_settings'] = replySettings;
-    data['source'] = source;
     data['edit_history_tweet_ids'] = editHistoryTweetIds;
     data['text'] = text;
-    // if (geo != null) {
-    //   data['geo'] = geo!.toJson();
-    // }
+    data['created_at'] = createdAt;
+    if (publicMetrics != null) {
+      data['public_metrics'] = publicMetrics!.toJson();
+    }
     return data;
   }
 }
 
 class Includes {
   List<Users>? users;
-  List<Places>? places;
 
-  Includes({this.users, this.places});
+  Includes({this.users});
 
   Includes.fromJson(Map<String, dynamic> json) {
     if (json['users'] != null) {
       users = <Users>[];
       json['users'].forEach((v) {
         users!.add(Users.fromJson(v));
-      });
-    }
-    if (json['places'] != null) {
-      places = <Places>[];
-      json['places'].forEach((v) {
-        places!.add(Places.fromJson(v));
       });
     }
   }
@@ -119,66 +162,47 @@ class Includes {
     if (users != null) {
       data['users'] = users!.map((v) => v.toJson()).toList();
     }
-    if (places != null) {
-      data['places'] = places!.map((v) => v.toJson()).toList();
-    }
     return data;
   }
 }
 
 class Users {
-  String? url;
-  bool? protected;
   String? description;
+  String? profileImageUrl;
+  String? name;
+  String? username;
   String? id;
   PublicMetrics? publicMetrics;
-  String? createdAt;
-  bool? verified;
-  String? username;
-  String? location;
-  String? name;
 
   Users(
-      {this.url,
-      this.protected,
-      this.description,
-      this.id,
-      this.publicMetrics,
-      this.createdAt,
-      this.verified,
+      {this.description,
+      this.profileImageUrl,
+      this.name,
       this.username,
-      this.location,
-      this.name});
+      this.id,
+      this.publicMetrics});
 
   Users.fromJson(Map<String, dynamic> json) {
-    url = json['url'];
-    protected = json['protected'];
     description = json['description'];
+    profileImageUrl = json['profile_image_url'];
+    name = json['name'];
+    username = json['username'];
     id = json['id'];
     publicMetrics = json['public_metrics'] != null
         ? PublicMetrics.fromJson(json['public_metrics'])
         : null;
-    createdAt = json['created_at'];
-    verified = json['verified'];
-    username = json['username'];
-    location = json['location'];
-    name = json['name'] ?? 'null';
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['url'] = url;
-    data['protected'] = protected;
     data['description'] = description;
+    data['profile_image_url'] = profileImageUrl;
+    data['name'] = name;
+    data['username'] = username;
     data['id'] = id;
     if (publicMetrics != null) {
       data['public_metrics'] = publicMetrics!.toJson();
     }
-    data['created_at'] = createdAt;
-    data['verified'] = verified;
-    data['username'] = username;
-    data['location'] = location;
-    data['name'] = name;
     return data;
   }
 }
@@ -212,69 +236,6 @@ class PublicMetrics {
   }
 }
 
-class Places {
-  // Geo? geo;
-  String? country;
-  String? countryCode;
-  String? name;
-  String? fullName;
-  String? id;
-  String? placeType;
-
-  Places(
-      {
-      this.country,
-      this.countryCode,
-      this.name,
-      this.fullName,
-      this.id,
-      this.placeType});
-
-  Places.fromJson(Map<String, dynamic> json) {
-    // geo = json['geo'] != null ? Geo.fromJson(json['geo']) : null;
-    country = json['country'];
-    countryCode = json['country_code'];
-    name = json['name'];
-    fullName = json['full_name'];
-    id = json['id'];
-    placeType = json['place_type'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    // if (geo != null) {
-    //   data['geo'] = geo!.toJson();
-    // }
-    data['country'] = country;
-    data['country_code'] = countryCode;
-    data['name'] = name;
-    data['full_name'] = fullName;
-    data['id'] = id;
-    data['place_type'] = placeType;
-    return data;
-  }
-}
-
-// class Geo {
-//   String? type;
-//   List<double>? bbox;
-
-//   Geo({this.type, this.bbox});
-
-//   Geo.fromJson(Map<String, dynamic> json) {
-//     type = json['type'];
-//     bbox = json['bbox'].cast<double>();
-//   }
-
-//   Map<String, dynamic> toJson() {
-//     final Map<String, dynamic> data = <String, dynamic>{};
-//     data['type'] = type;
-//     data['bbox'] = bbox;
-
-//     return data;
-//   }
-// }
-
 class Meta {
   String? newestId;
   String? oldestId;
@@ -296,6 +257,134 @@ class Meta {
     data['oldest_id'] = oldestId;
     data['result_count'] = resultCount;
     data['next_token'] = nextToken;
+    return data;
+  }
+}
+
+class RateLimit {
+  int? limit;
+  int? remaining;
+  int? reset;
+
+  RateLimit({this.limit, this.remaining, this.reset});
+
+  RateLimit.fromJson(Map<String, dynamic> json) {
+    limit = json['limit'];
+    remaining = json['remaining'];
+    reset = json['reset'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['limit'] = limit;
+    data['remaining'] = remaining;
+    data['reset'] = reset;
+    return data;
+  }
+}
+
+class Instance {
+  Null? nCurrentUser;
+  Null? nCurrentUserV2;
+  RequestMaker? rRequestMaker;
+  String? sPrefix;
+
+  Instance(
+      {this.nCurrentUser,
+      this.nCurrentUserV2,
+      this.rRequestMaker,
+      this.sPrefix});
+
+  Instance.fromJson(Map<String, dynamic> json) {
+    nCurrentUser = json['_currentUser'];
+    nCurrentUserV2 = json['_currentUserV2'];
+    rRequestMaker = json['_requestMaker'] != null
+        ? RequestMaker.fromJson(json['_requestMaker'])
+        : null;
+    sPrefix = json['_prefix'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_currentUser'] = nCurrentUser;
+    data['_currentUserV2'] = nCurrentUserV2;
+    if (rRequestMaker != null) {
+      data['_requestMaker'] = rRequestMaker!.toJson();
+    }
+    data['_prefix'] = sPrefix;
+    return data;
+  }
+}
+
+class RequestMaker {
+  RateLimits? rateLimits;
+
+  String? bearerToken;
+
+  RequestMaker({this.rateLimits, this.bearerToken});
+
+  RequestMaker.fromJson(Map<String, dynamic> json) {
+    rateLimits = json['rateLimits'] != null
+        ? RateLimits.fromJson(json['rateLimits'])
+        : null;
+
+    bearerToken = json['bearerToken'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (rateLimits != null) {
+      data['rateLimits'] = rateLimits!.toJson();
+    }
+    data['bearerToken'] = bearerToken;
+    return data;
+  }
+}
+
+class RateLimits {
+  RateLimit? httpsApiTwitterCom2TweetsSearchRecent;
+
+  RateLimits({this.httpsApiTwitterCom2TweetsSearchRecent});
+
+  RateLimits.fromJson(Map<String, dynamic> json) {
+    httpsApiTwitterCom2TweetsSearchRecent =
+        json['https://api.twitter.com/2/tweets/search/recent'] != null
+            ? RateLimit.fromJson(
+                json['https://api.twitter.com/2/tweets/search/recent'])
+            : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (httpsApiTwitterCom2TweetsSearchRecent != null) {
+      data['https://api.twitter.com/2/tweets/search/recent'] =
+          httpsApiTwitterCom2TweetsSearchRecent!.toJson();
+    }
+    return data;
+  }
+}
+
+class QueryParams {
+  String? expansions;
+  List<String>? userFields;
+  List<String>? tweetFields;
+  String? query;
+
+  QueryParams({this.expansions, this.userFields, this.tweetFields, this.query});
+
+  QueryParams.fromJson(Map<String, dynamic> json) {
+    expansions = json['expansions'];
+    userFields = json['user.fields'].cast<String>();
+    tweetFields = json['tweet.fields'].cast<String>();
+    query = json['query'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['expansions'] = expansions;
+    data['user.fields'] = userFields;
+    data['tweet.fields'] = tweetFields;
+    data['query'] = query;
     return data;
   }
 }

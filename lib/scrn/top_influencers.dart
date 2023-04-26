@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:hive_flutter/hive_flutter.dart';
-
-import 'package:twitter_observation/api/api_followers.dart';
 import 'package:url_launcher/link.dart';
+import '../api/api_follow.dart';
 import '../api_model/follower_model.dart';
-import '../main.dart';
-import '../model/transaction.dart';
 
-import 'save_folder.dart';
-
-final suggestionFollower =
-    FutureProvider.family<List<FollowerModel>, String>((ref, id) async {
+final suggestionFollower = FutureProvider.autoDispose
+    .family<List<FollowerModel>, String>((ref, id) async {
   final apiService = ref.watch(apiServiceFollower);
   return apiService.getApi(id);
 });
@@ -21,7 +15,7 @@ int apiCallCount = 0;
 const int maxApiCallsPerMinute = 10;
 
 class TopInfluencers extends ConsumerWidget {
-  TopInfluencers({Key? key, required this.searchInfo}) : super(key: key);
+  const TopInfluencers({Key? key, required this.searchInfo}) : super(key: key);
 
   final String searchInfo;
 
@@ -46,10 +40,16 @@ class TopInfluencers extends ConsumerWidget {
                       shrinkWrap: true,
                       itemCount: 10, //data[index].includes!.users!.length,
                       itemBuilder: ((context, index1) {
-                        if (data[index].meta!.resultCount! > 90) {
+                        if (data[index]
+                                .response!
+                                .rRealData!
+                                .meta!
+                                .resultCount! >
+                            90) {
                           Future.delayed(const Duration(minutes: 1));
                         }
-                        var tList = data[index].includes!.users!;
+                        var tList =
+                            data[index].response!.rRealData!.includes!.users!;
 
                         tList.sort(
                           (a, b) => b.publicMetrics!.followersCount!
@@ -58,7 +58,12 @@ class TopInfluencers extends ConsumerWidget {
                         return Card(
                           color: const Color.fromARGB(255, 20, 42, 68),
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.only(
+                              top: 8,
+                              bottom: 8,
+                              left: 22,
+                              right: 22,
+                            ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -69,15 +74,17 @@ class TopInfluencers extends ConsumerWidget {
                                     Column(
                                       children: [
                                         Text(data[index]
+                                            .response!
+                                            .rRealData!
                                             .includes!
                                             .users![index1]
                                             .name!),
                                         Text(
-                                            '@${data[index].includes!.users![index1].username!}'),
+                                            '@${data[index].response!.rRealData!.includes!.users![index1].username!}'),
                                       ],
                                     ),
                                     Text(
-                                      'followers: ${data[index].includes!.users![index1].publicMetrics!.followersCount!.toString()}',
+                                      'followers: ${data[index].response!.rRealData!.includes!.users![index1].publicMetrics!.followersCount!.toString()}',
                                     ),
                                   ],
                                 ),
@@ -85,12 +92,16 @@ class TopInfluencers extends ConsumerWidget {
                                   height: 10,
                                 ),
                                 Text(
-                                    'Bio: ${data[index].includes!.users![index1].description!}'),
+                                  'Bio: ${data[index].response!.rRealData!.includes!.users![index1].description!}',
+                                ),
+                                const SizedBox(
+                                  height: 15,
+                                ),
                                 Center(
                                   child: Link(
                                     target: LinkTarget.blank,
                                     uri: Uri.parse(
-                                        'https://twitter.com/${data[index].includes!.users![index1].username}'),
+                                        'https://twitter.com/${data[index].response!.rRealData!.includes!.users![index1].username}'),
                                     builder: (context, followLink) =>
                                         TextButton(
                                       onPressed: followLink,

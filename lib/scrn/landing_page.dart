@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:twitter_observation/scrn/starting_page.dart';
 import 'package:twitter_observation/widgets/buttons.dart';
+import 'package:video_player/video_player.dart';
+
+import '../widgets/video_player_widget.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -12,23 +15,29 @@ class LandingPage extends StatefulWidget {
 class _LandingPageState extends State<LandingPage> {
   // final authService = AuthService();
 
-  // final asset = 'assets/video_1.mp4';
-  // VideoPlayerController? controller;
+  final asset = 'videos/video_2.mp4';
+  late VideoPlayerController controller;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   controller = VideoPlayerController.asset(asset)
-  //     ..addListener(() => setState(() {}))
-  //     ..setLooping(true)
-  //     ..initialize().then((_) => controller?.play());
-  // }
+  @override
+  void initState() {
+    super.initState();
+    controller = VideoPlayerController.asset(asset)
+      // ..initialize().then((_) {
+      //   controller.setVolume(0);
+      //   controller.play();
+      //   controller.setLooping(true);
+      //   setState(() {});
+      // });
+      ..addListener(() => setState(() {}))
+      ..setLooping(true)
+      ..initialize().then((_) => controller.play());
+  }
 
-  // @override
-  // void dispose() {
-  //   controller?.dispose();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +123,10 @@ class _LandingPageState extends State<LandingPage> {
                   const SizedBox(
                     height: 35,
                   ),
-                  // VideoPlayerWidget(controller: controller),
+                  VideoPlayerWidget(controller: controller),
+                  const SizedBox(
+                    height: 50,
+                  ),
 
                   const Text(
                     'What can you do with our Twitter observation tool?',
@@ -175,7 +187,6 @@ class _LandingPageState extends State<LandingPage> {
                                   fontSize: 24,
                                   fontWeight: FontWeight.w400,
                                   color: Colors.black,
-
                                 ),
                               ),
                               Text(
@@ -201,7 +212,6 @@ class _LandingPageState extends State<LandingPage> {
                                   fontSize: 24,
                                   fontWeight: FontWeight.w400,
                                   color: Colors.black,
-
                                 ),
                               ),
                               Text(
@@ -227,7 +237,6 @@ class _LandingPageState extends State<LandingPage> {
                                   fontSize: 24,
                                   fontWeight: FontWeight.w400,
                                   color: Colors.black,
-
                                 ),
                               ),
                               Text(
@@ -253,7 +262,6 @@ class _LandingPageState extends State<LandingPage> {
                                   fontSize: 24,
                                   fontWeight: FontWeight.w400,
                                   color: Colors.black,
-
                                 ),
                               ),
                               Text(

@@ -1,12 +1,14 @@
 import 'package:d_chart/d_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:twitter_observation/api/api_tweet_amount.dart';
+import 'package:intl/intl.dart';
 
-import '../api_model/tweet_amount_model.dart';
+import 'package:twitter_observation/api_model/amount_model.dart';
 
-final tweetFutureProvider =
-    FutureProvider.family<List<TweetAmount>, String>((ref, id) async {
+import '../api/api_amount.dart';
+
+final tweetFutureProvider = FutureProvider.autoDispose
+    .family<List<AmountModel>, String>((ref, id) async {
   final apiService = ref.watch(apiServiceTweet);
   return apiService.getApi(id);
 });
@@ -33,8 +35,8 @@ class DashboardScreen extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  const Text('Total tweet count'),
-                  Text('${data[0].meta!.totalTweetCount}'),
+                  const Text('Total tweet count (last 7 days)'),
+                  Text('${data[0].response!.meta!.totalTweetCount}'),
                 ],
               ),
               const SizedBox(
@@ -49,19 +51,55 @@ class DashboardScreen extends ConsumerWidget {
                     {
                       'id': 'Bar',
                       'data': [
-                        {'domain': 'S', 'measure': data[0].data![0].tweetCount},
                         {
-                          'domain': 'Su',
-                          'measure': data[0].data![1].tweetCount
+                          'domain': DateFormat('EEEE')
+                              .format(DateTime.parse(
+                                  data[0].response!.data![0].end!))
+                              .toString(),
+                          'measure': data[0].response!.data![0].tweetCount
                         },
-                        {'domain': 'M', 'measure': data[0].data![2].tweetCount},
-                        {'domain': 'T', 'measure': data[0].data![3].tweetCount},
-                        {'domain': 'W', 'measure': data[0].data![4].tweetCount},
                         {
-                          'domain': 'Thu',
-                          'measure': data[0].data![5].tweetCount
+                          'domain': DateFormat('EEEE')
+                              .format(DateTime.parse(
+                                  data[0].response!.data![1].end!))
+                              .toString(),
+                          'measure': data[0].response!.data![1].tweetCount
                         },
-                        {'domain': 'F', 'measure': data[0].data![6].tweetCount},
+                        {
+                          'domain': DateFormat('EEEE')
+                              .format(DateTime.parse(
+                                  data[0].response!.data![2].end!))
+                              .toString(),
+                          'measure': data[0].response!.data![2].tweetCount
+                        },
+                        {
+                          'domain': DateFormat('EEEE')
+                              .format(DateTime.parse(
+                                  data[0].response!.data![3].end!))
+                              .toString(),
+                          'measure': data[0].response!.data![3].tweetCount
+                        },
+                        {
+                          'domain': DateFormat('EEEE')
+                              .format(DateTime.parse(
+                                  data[0].response!.data![4].end!))
+                              .toString(),
+                          'measure': data[0].response!.data![4].tweetCount
+                        },
+                        {
+                          'domain': DateFormat('EEEE')
+                              .format(DateTime.parse(
+                                  data[0].response!.data![5].end!))
+                              .toString(),
+                          'measure': data[0].response!.data![5].tweetCount
+                        },
+                        {
+                          'domain': DateFormat('EEEE')
+                              .format(DateTime.parse(
+                                  data[0].response!.data![6].end!))
+                              .toString(),
+                          'measure': data[0].response!.data![6].tweetCount
+                        },
                       ],
                     },
                   ],
@@ -69,6 +107,9 @@ class DashboardScreen extends ConsumerWidget {
                   axisLineTick: 2,
                   axisLinePointTick: 2,
                   axisLinePointWidth: 10,
+                  measureLabelColor: Colors.white,
+                  domainLabelColor: Colors.white,
+                  showDomainLine: true,
                   axisLineColor: Colors.deepPurpleAccent,
                   measureLabelPaddingToAxisLine: 16,
                   barColor: (barData, index, id) => Colors.deepPurpleAccent,

@@ -7,16 +7,17 @@ import 'package:intl/intl.dart';
 
 import 'package:url_launcher/link.dart';
 
-import '../api/api_service_recent_search.dart';
-import '../api_model/api_model_recent_search.dart';
+import '../api/api_search.dart';
+
+import '../api_model/search_model.dart';
 import '../main.dart';
 import '../model/transaction.dart';
 
 import 'save_folder.dart';
 
 final suggestionFutureProvider =
-    FutureProvider.family<List<ApiModelRecentSearch>, String>((ref, id) async {
-  final apiService = ref.watch(apiServiceProvider);
+    FutureProvider.autoDispose.family<List<SearchModel>, String>((ref, id) async {
+  final apiService = ref.watch(apiProvider);
   return apiService.getApi(id);
 });
 
@@ -70,21 +71,21 @@ class MostLiked extends ConsumerWidget {
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: 10,
                       itemBuilder: ((context, index1) {
-                        var nlist = data[index].data!;
-        
+                        var nlist = data[index].response!.rRealData!.data!;
+
                         nlist.sort(
                           (a, b) => b.publicMetrics!.likeCount!
                               .compareTo(a.publicMetrics!.likeCount!),
                         );
                         // print(nlist.toString());
                         // var alist = [1, 0, 0, 1, 0, 0, 2, 0];
-        
+
                         // alist.sort(
                         //   (a, b) => b.compareTo(a),
                         // );
-        
+
                         // print(alist.toString());
-        
+
                         // while (data[index]
                         //             .data![index1]
                         //             .publicMetrics!
@@ -99,13 +100,15 @@ class MostLiked extends ConsumerWidget {
                               children: [
                                 Text(index1.toString()),
                                 Text(
-                                  'Tweet created at: ${DateFormat('yyyy-MM-dd KK:mm:ss a').format(DateTime.parse(data[index].data![index1].createdAt!)).toString()}',
+                                  'Tweet created at: ${DateFormat('yyyy-MM-dd KK:mm:ss a').format(DateTime.parse(data[index].response!.rRealData!.data![index1].createdAt!)).toString()}',
                                 ),
                                 Row(
                                   children: [
                                     CircleAvatar(
                                       radius: 17,
                                       backgroundImage: NetworkImage(data[index]
+                                          .response!
+                                          .rRealData!
                                           .includes!
                                           .users![index1]
                                           .profileImageUrl!),
@@ -117,6 +120,8 @@ class MostLiked extends ConsumerWidget {
                                       fit: FlexFit.loose,
                                       child: Text(
                                         data[index]
+                                            .response!
+                                            .rRealData!
                                             .includes!
                                             .users![index1]
                                             .name!,
@@ -131,7 +136,11 @@ class MostLiked extends ConsumerWidget {
                                 const SizedBox(
                                   height: 8,
                                 ),
-                                Text(data[index].data![index1].text!),
+                                Text(data[index]
+                                    .response!
+                                    .rRealData!
+                                    .data![index1]
+                                    .text!),
                                 const SizedBox(
                                   height: 14,
                                 ),
@@ -148,6 +157,8 @@ class MostLiked extends ConsumerWidget {
                                     ),
                                     Text(
                                       data[index]
+                                          .response!
+                                          .rRealData!
                                           .data![index1]
                                           .publicMetrics!
                                           .likeCount!
@@ -155,6 +166,9 @@ class MostLiked extends ConsumerWidget {
                                     )
                                   ],
                                 ),
+                                const SizedBox(
+                                    height: 15,
+                                  ),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
@@ -162,7 +176,7 @@ class MostLiked extends ConsumerWidget {
                                     Link(
                                       target: LinkTarget.blank,
                                       uri: Uri.parse(
-                                          'https://twitter.com/${data[index].includes!.users![index].username}/status/${data[index].data![index1].id!}'),
+                                          'https://twitter.com/${data[index].response!.rRealData!.includes!.users![index].username}/status/${data[index].response!.rRealData!.data![index1].id!}'),
                                       builder: (context, followLink) =>
                                           TextButton(
                                         onPressed: followLink,
@@ -172,28 +186,30 @@ class MostLiked extends ConsumerWidget {
                                     TextButton(
                                       onPressed: () {
                                         var tweetData = data[index]
+                                            .response!
+                                            .rRealData!
                                             .data![index1]
                                             .text!
                                             .toString();
-        
+
                                         var link =
-                                            'https://twitter.com/${data[index].includes!.users![index].username}/status/${data[index].data![index1].id!}';
-        
+                                            'https://twitter.com/${data[index].response!.rRealData!.includes!.users![index].username}/status/${data[index].response!.rRealData!.data![index1].id!}';
+
                                         myBox.add(
                                           Transaction(
                                               tweet: tweetData, link: link),
                                         );
-        
+
                                         final snackBar = SnackBar(
                                           backgroundColor:
                                               Colors.black.withOpacity(.3),
-                                          duration:
-                                              const Duration(milliseconds: 1000),
+                                          duration: const Duration(
+                                              milliseconds: 1000),
                                           content: const Center(
                                             child: Text('photo saved!'),
                                           ),
                                         );
-        
+
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(snackBar);
                                       },

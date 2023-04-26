@@ -1,19 +1,11 @@
-import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:lottie/lottie.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:path_provider/path_provider.dart' as path_provider;
-import 'package:flex_color_scheme/flex_color_scheme.dart';
-import 'package:twitter_login/twitter_login.dart';
-import 'package:twitter_observation/scrn/login_page.dart';
+
 import 'package:twitter_observation/scrn/responsive_page.dart';
 
 import 'model/transaction.dart';
-import 'scrn/landing_page.dart';
-import 'scrn/starting_page.dart';
 
 const String boxName = 'fact';
 const String logName = 'twit';

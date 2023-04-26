@@ -6,7 +6,7 @@ import 'package:twitter_observation/scrn/most_retweeted.dart';
 import 'package:twitter_observation/scrn/top_influencers.dart';
 import 'package:twitter_observation/widgets/buttons.dart';
 
-import 'recent_search_info.dart';
+import 'recent_search.dart';
 
 class MobileFeaturedashboard extends StatefulWidget {
   const MobileFeaturedashboard({Key? key}) : super(key: key);
@@ -115,9 +115,8 @@ class _MobileFeaturedashboardState extends State<MobileFeaturedashboard> {
                                   search.isNotEmpty
                                       ? Navigator.of(context).push(
                                           MaterialPageRoute(
-                                            builder: (context) =>
-                                                RecentSearchInfo(
-                                                    searchInfo: search),
+                                            builder: (context) => RecentSearch(
+                                                searchInfo: search),
                                           ),
                                         )
                                       : Container();
@@ -152,8 +151,9 @@ class _MobileFeaturedashboardState extends State<MobileFeaturedashboard> {
                                   search.isNotEmpty
                                       ? Navigator.of(context).push(
                                           MaterialPageRoute(
-                                            builder: (context) => DashboardScreen(
-                                                searchInfo: search),
+                                            builder: (context) =>
+                                                DashboardScreen(
+                                                    searchInfo: search),
                                           ),
                                         )
                                       : Container();
@@ -188,8 +188,8 @@ class _MobileFeaturedashboardState extends State<MobileFeaturedashboard> {
                                   search.isNotEmpty
                                       ? Navigator.of(context).push(
                                           MaterialPageRoute(
-                                            builder: (context) =>
-                                                MostRetweeted(searchInfo: search),
+                                            builder: (context) => MostRetweeted(
+                                                searchInfo: search),
                                           ),
                                         )
                                       : Container();
@@ -260,8 +260,9 @@ class _MobileFeaturedashboardState extends State<MobileFeaturedashboard> {
                                   search.isNotEmpty
                                       ? Navigator.of(context).push(
                                           MaterialPageRoute(
-                                            builder: (context) => TopInfluencers(
-                                                searchInfo: search),
+                                            builder: (context) =>
+                                                TopInfluencers(
+                                                    searchInfo: search),
                                           ),
                                         )
                                       : Container();

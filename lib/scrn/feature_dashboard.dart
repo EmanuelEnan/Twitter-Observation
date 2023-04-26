@@ -6,7 +6,7 @@ import 'package:twitter_observation/scrn/most_retweeted.dart';
 import 'package:twitter_observation/scrn/top_influencers.dart';
 import 'package:twitter_observation/widgets/buttons.dart';
 
-import 'recent_search_info.dart';
+import 'recent_search.dart';
 
 class Featuredashboard extends StatefulWidget {
   const Featuredashboard({Key? key}) : super(key: key);
@@ -113,8 +113,7 @@ class _FeaturedashboardState extends State<Featuredashboard> {
                                     ? Navigator.of(context).push(
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              RecentSearchInfo(
-                                                  searchInfo: search),
+                                              RecentSearch(searchInfo: search),
                                         ),
                                       )
                                     : Container();
